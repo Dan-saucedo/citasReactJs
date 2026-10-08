@@ -21,12 +21,13 @@
     box-shadow: 0 20px -5px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.5);
 }
 
-.btn-cerrarModal {
+.btn-cerrar-modal {
     display: block;
     box-sizing: border-box;
     background-color: #a4a4a4;
     padding: 0.9375rem 1.5rem;
-    margin: 1.875rem auto 0 auto;
+    /* margin: 1.875rem auto 0 auto; */
+    margin: 10px auto;
     border-radius: 10px;
     border: none;
     width: 100%;
@@ -34,13 +35,12 @@
     transition: background-color 0.2s ease;
 }
 
-.btn-cerrarModal:hover {
+.btn-cerrar-modal:hover {
     background-color: #6d28d9;
     cursor: pointer;
 }
 
 .formulario-contenido {
-    background-color: #6d28d9;
     padding: 30px;
     border-radius: 12px;
     box-sizing: border-box;
@@ -48,12 +48,16 @@
 }
 
 .formulario-titulo {
-    color: #fff;
     font-size: 30px;
     font-weight: 600;
     text-align: center;
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.formulario-titulo-bold {
+    color: #6d28d9;
+    font-weight: 900;   
 }
 
 .btn-texto-cerrar-modal {
@@ -64,3 +68,57 @@
     text-transform: uppercase;
     letter-spacing: 0.05rem;
 }
+
+.formulario-campo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.formulario-label {
+    color: #515151;
+    margin-top: 20px;
+    /* margin-bottom: 5px;  */
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.formulario-input {
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    background-color: #d8d8d8;
+    color: #1e1e1e;
+    width: 75%;
+}
+
+.formulario-input:hover{
+    background-color: #cbcbcb;
+    border-color: #9554ff;
+    border-width: 2px;
+}
+
+.formulario-btn-submit {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding: 15px 0px;
+    background-color: #f59e0b;
+    color: #5827a4;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: backgorund-color 0.2s ease;
+}
+
+.formulario-btn-submit:hover {
+    background-color: #d98806;
+}
+
