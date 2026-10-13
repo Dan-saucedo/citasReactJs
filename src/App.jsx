@@ -12,6 +12,15 @@ function App() {
    * Definitions:
    * To pass a child state to antoher component, it should be through PROPS
    */
+  const eliminarPaciente = (id)=> {
+    const confirmar = window.confirm("Desea eliminar al paciente?");
+    console.log(confirmar);
+
+    if(confirmar){
+      const pacienteEliminado = pacientes.filter((paciente) => paciente.id !== id);
+      setPacientes(pacienteEliminado);
+    }
+  }
 
   return (
     <main className = "container">
@@ -27,6 +36,8 @@ function App() {
             setVisible={setVisible}
             pacientes={pacientes}
             paciente={paciente}
+            eliminarPaciente={eliminarPaciente}
+            key={paciente.id}
           />
       )}
 
