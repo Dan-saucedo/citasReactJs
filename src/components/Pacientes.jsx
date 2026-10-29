@@ -4,7 +4,8 @@ const Paciente = ({
         setVisible,
         pacientes,
         paciente,
-        eliminarPaciente
+        eliminarPaciente,
+        editarPaciente
 }) => {
 
 // parametros espacio para guardar algo
@@ -14,6 +15,7 @@ const Paciente = ({
     const handleEditar = () => {
         setVisible(true);
         console.log(pacientes)
+        editarPaciente(paciente.id);
     }
     const handleEliminar = () => {
         //Tomar la funcion de eliminar y pasar el id

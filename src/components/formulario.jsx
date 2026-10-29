@@ -1,15 +1,67 @@
 import '../css/formulario.css';
-import { use, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
+const Formulario = ({ visible, setVisible, pacientes, setPacientes, editPaciente, setEditPaciente}) => {
     // Si no está visible, no renderizamos nada
     //Una variable que guarda el valor del state y set cambia/actualiza el valor del el state
-    const  [ nombrePaciente, setNombrePaciente ] = useState('');  
+    const [ nombrePaciente, setNombrePaciente ] = useState('');  
     const [ propietario, setPropietario ] = useState('');
     const [ tel, setTel ] = useState('');
     const [ mail, setMail ] = useState('');
     const [ dateRegister, setDateRegister ] = useState('');
     const [ sintomas, setSintomas ] = useState('');
+    const [ idPaciente, setIdPaciente ] = useState('');
+    const [ mostrarAlerta, setMostrarAlerta ] = useState(false);
+    const alertaTimeout = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (alertaTimeout.current !== null) {
+                window.clearTimeout(alertaTimeout.current);
+            }
+        };
+    }, []);
+
+    const alerta = ()=> {
+        setMostrarAlerta(true);
+        if (alertaTimeout.current !== null) {
+            window.clearTimeout(alertaTimeout.current);
+        }
+        alertaTimeout.current = window.setTimeout(() => {
+            setMostrarAlerta(false);
+            alertaTimeout.current = null;
+        }, 5000);
+    };
+
+    useEffect(()=> {
+        if(Object.keys(editPaciente).length > 0 ){
+            setPropietario(editPaciente.propietario);
+            setNombrePaciente(editPaciente.nombrePaciente);
+            setTel(editPaciente.tel);
+            setMail(editPaciente.mail);
+            setDateRegister(editPaciente.dateRegister);
+            setSintomas(editPaciente.sintomas);
+            setIdPaciente(editPaciente.id);
+        }
+    }, []);
+
+    //Funcion generica para vaciar formulario
+    const resetFormulario = ()=> {
+        setPropietario('');
+        setNombrePaciente('');
+        setTel('');
+        setMail('');
+        setDateRegister('');
+        setSintomas('');
+    };
+
+    //Asociada a un trigger
+    const handleCerrar = ()=> {
+        setVisible(false);
+        resetFormulario();
+        setEditPaciente({});
+        setMostrarAlerta(false);
+    };
 
     //Create 5 new states
     //Create 5 new inputs
@@ -21,10 +73,12 @@ const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
         e.preventDefault();
         //Validate all fields are required
         if([nombrePaciente.trim(), propietario.trim(), tel.trim(), mail.trim(), dateRegister.trim(), sintomas.trim()].includes('')){
-            window.alert('Error: Todos los campos son obligatorios')
+            alerta();
             return;
         }
-        const pacienteAlta = {
+        
+        setMostrarAlerta(false);
+        const pacienteActualizado = {
             nombrePaciente: nombrePaciente.trim(),
             propietario: propietario.trim(),
             mail: mail.trim(),
@@ -32,12 +86,22 @@ const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
             dateRegister,
             sintomas: sintomas.trim()
         };
-        console.log(pacienteAlta);
 
-        //Add id
-        pacienteAlta.id = Date.now();
-        console.log(pacienteAlta);
-        setPacientes([...pacientes, pacienteAlta]);
+        if (idPaciente) {
+            pacienteActualizado.id = idPaciente;
+            setPacientes((pacientesActuales) =>
+                pacientesActuales.map((paciente) =>
+                    paciente.id === idPaciente ? pacienteActualizado : paciente
+                )
+            );
+            setEditPaciente({});
+            setIdPaciente('');
+        } else {
+            pacienteActualizado.id = Date.now();
+            setPacientes((pacientesActuales) => [...pacientesActuales, pacienteActualizado]);
+        }
+
+        resetFormulario();
         setVisible(false);
     }
 
@@ -46,10 +110,18 @@ const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
             <div className="modal-content">
                 
                 <div className='formulario-contenido'>
-                    <h1 className="formulario-titulo"> Nueva <span className='formulario-titulo-bold'> Cita </span></h1>
+                    <h1 className="formulario-titulo"> {idPaciente ? 'Editar' : 'Nueva'} <span className='formulario-titulo-bold'> Cita </span></h1>
                 </div>
 
-                <button className='btn-cerrar-modal' onClick={() => setVisible(false)}>
+                {mostrarAlerta && (
+                    <div className='alerta' role='alert'>
+                        <span className='btn-texto-cerrar-alerta'>
+                            Todos los campos son obligatorios
+                        </span>
+                    </div>
+                )}
+
+                <button className='btn-cerrar-modal' onClick={(e) => handleCerrar(e)}>
                     <span className='btn-texto-cerrar-modal'>Cerrar</span>
                 </button>
 
@@ -61,7 +133,7 @@ const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
                         value = {nombrePaciente} onChange={(e)=> setNombrePaciente(e.target.value)} />
 
                         <label htmlFor='propietario' className='formulario-label'> Nombre del propietario </label>
-                        <input id='propietario' type='text' className='formulario-input' placeholder='E.g. Jorge Tavarez'
+                        <input id='propietario' type='text' className='formulario-input' placeholder='E.g. Jorge'
                         value = {propietario} onChange={(e)=> setPropietario(e.target.value)} />
 
                         <label htmlFor='telefono' className='formulario-label'> Nombre Paciente </label>
@@ -82,7 +154,7 @@ const Formulario = ({ visible, setVisible, pacientes, setPacientes }) => {
 
                     </div>
 
-                    <button type='submit' className='formulario-btn-submit'> Agregar paciente </button>
+                    <button type='submit' className='formulario-btn-submit'> {idPaciente ? 'Editar' : 'Agregar'} paciente </button>
                  </form>
             </div>
         </div>
